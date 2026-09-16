@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis XV Años - Gerelly Madrid</title>
+    <meta name="description" content="Te invito a celebrar mis XV años.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@300;400;600&family=Great+Vibes&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Música de fondo -->
+    <audio id="bgMusic" loop>
+        <source src="musica.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <!-- Portada (Overlay) -->
+    <div id="coverOverlay" class="cover-overlay">
+        
+        <!-- Partículas Mágicas -->
+        <div class="sparkles-container">
+            <div class="sparkle s1"></div>
+            <div class="sparkle s2"></div>
+            <div class="sparkle s3"></div>
+            <div class="sparkle s4"></div>
+            <div class="sparkle s5"></div>
+            <div class="sparkle s6"></div>
+            <div class="sparkle s7"></div>
+            <div class="sparkle s8"></div>
+        </div>
+
+        <div class="cover-content">
+            <h1 class="cover-subtitle">Mis XV Años</h1>
+            <h2 class="names cover-title-main">Gerelly Madrid</h2>
+            <button id="enterBtn" class="btn btn-primary pulse-anim">Abrir Invitación 🎵</button>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <main class="main-content hidden" id="mainContent">
+
+        <!-- Botón flotante para la música -->
+        <button id="musicToggleBtn" class="music-toggle-btn playing" aria-label="Toggle music">
+            <svg id="musicIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18V5l12-2v13"></path>
+                <circle cx="6" cy="18" r="3"></circle>
+                <circle cx="18" cy="16" r="3"></circle>
+            </svg>
+        </button>
+
+        <section class="hero-section glass-panel">
+            <h3 class="section-subtitle">Con la bendición de Dios y mis padres:</h3>
+            <p class="parents-names">Rossana Quispe Pérez<br>Oscar Alberto Vera Vela</p>
+            <div class="divider"></div>
+
+            <h2 class="names">Gerelly Madrid</h2>
+            <p class="date-text">17 de Octubre de 2026</p>
+            <div class="divider"></div>
+
+            <!-- Personalized Guest Info (Hidden by default, shown via JS if URL params exist) -->
+            <div id="guestInfoContainer" class="guest-info hidden">
+                <h3 id="guestNameDisplay" class="guest-name"></h3>
+                <div class="passes-badge">
+                    <span>Pases Reservados: </span>
+                    <strong id="guestPassesDisplay">1</strong>
+                </div>
+            </div>
+
+            <div class="countdown-container">
+                <h3>Faltan:</h3>
+                <div id="countdown" class="countdown">
+                    <div class="time-box"><span id="days">00</span><small>Días</small></div>
+                    <div class="time-box"><span id="hours">00</span><small>Hrs</small></div>
+                    <div class="time-box"><span id="minutes">00</span><small>Min</small></div>
+                    <div class="time-box"><span id="seconds">00</span><small>Seg</small></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="details-section glass-panel fade-in">
+            <h3 class="section-title">¿Dónde y Cuándo?</h3>
+            <div class="event-details">
+                <div class="detail-item">
+                    <h4>Fecha y Hora</h4>
+                    <p>Sábado, 17 de Octubre de 2026<br>7:00 p. m.</p>
+                </div>
+                <div class="detail-item">
+                    <h4>Lugar</h4>
+                    <p><strong>La Prechochura</strong><br>Carretera Polvoraico s/n, Morales<br><small>(a 400 metros del
+                            puente El Vado)</small></p>
+                </div>
+                <a href="https://maps.app.goo.gl/Ur3t1L3WR7hTirSC7" target="_blank" rel="noopener noreferrer"
+                    class="btn btn-secondary map-btn">
+                    📍 Ver en Google Maps
+                </a>
+            </div>
+        </section>
+
+
+
+        <section class="info-section glass-panel fade-in">
+            <div class="dress-code">
+                <h3 class="section-title">Código de Vestimenta</h3>
+                <p>Elegante.</p>
+                <p class="highlight-text"><strong>Importante:</strong> El color lila está reservado exclusivamente para
+                    la quinceañera.</p>
+            </div>
+        </section>
+
+        <section class="gifts-section glass-panel fade-in">
+            <h3 class="section-title">Muestra de Cariño</h3>
+            <p>Tu presencia ilumina este día y es el regalo más valioso. Pero si deseas brindarme algún presente, lo
+                recibiré con mucho cariño.</p>
+            <button id="openGiftBtn" class="btn btn-primary" style="margin-top: 20px;">
+                🎁 Ver datos de Yape / Regalo
+            </button>
+        </section>
+
+        <section class="interactive-section glass-panel fade-in">
+            <h3 class="section-title">¡Que no pare la fiesta!</h3>
+            <p>Queremos que la pista esté llena toda la noche. Agrega tus canciones favoritas a nuestra playlist
+                colaborativa de Spotify.</p>
+            <a href="https://open.spotify.com/playlist/30kTqeRmImQiJoCsLjmQYL?si=D8nrBsrnTL2Vq2urx3yz0Q&utm_source=copy-link&pt=95f4abde3be7a8ad111b23d1ba244411&pi=3KPLUKUHQ0KuG"
+                target="_blank" rel="noopener noreferrer" class="btn btn-primary playlist-btn"
+                style="background-color: #1DB954; box-shadow: 0 4px 15px rgba(29, 185, 84, 0.4);">
+                🎧 Agregar en Spotify
+            </a>
+        </section>
+
+        <section class="rsvp-section glass-panel fade-in">
+            <h3 class="section-title">Asistencia</h3>
+            <p>Por favor, confirma tu asistencia para considerarte en este día tan especial.</p>
+            <button id="openRsvpBtn" class="btn btn-whatsapp" style="border: none;">
+                📝 Confirmar Asistencia
+            </button>
+        </section>
+
+        <footer class="footer">
+            <p>¡Te espero para compartir este momento inolvidable!</p>
+        </footer>
+
+        <!-- Modal Yape -->
+        <div id="giftModal" class="modal-overlay hidden">
+            <div class="modal-content glass-panel">
+                <button id="closeGiftBtn" class="close-modal">&times;</button>
+                <h3 class="modal-title">Aporte Voluntario</h3>
+                <p class="modal-text">Si deseas enviarle un presente digital a Gerelly:</p>
+                <div class="yape-highlight">
+                    <p class="yape-app">Yape</p>
+                    <p class="yape-number">956578690</p>
+                    <p class="yape-name">Rossana Quispe Perez</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal RSVP -->
+        <div id="rsvpModal" class="modal-overlay hidden">
+            <div class="modal-content glass-panel">
+                <button id="closeRsvpBtn" class="close-modal">&times;</button>
+                <h3 class="modal-title">Confirmación</h3>
+                <p class="modal-text">Déjanos saber si nos acompañarás:</p>
+                <form id="rsvpForm" class="rsvp-form">
+                    <input type="text" id="rsvpName" placeholder="Tu Nombre y Apellido" required>
+                    
+                    <select id="rsvpStatus" required>
+                        <option value="" disabled selected>¿Asistirás al evento?</option>
+                        <option value="Sí, ahí estaré con mucho gusto">✅ Sí, ahí estaré</option>
+                        <option value="Lamentablemente no podré asistir">❌ No podré asistir</option>
+                    </select>
+                    
+                    <textarea id="rsvpMessage" rows="3" placeholder="Mensaje para Gerelly (Opcional)"></textarea>
+                    
+                    <button type="submit" class="btn btn-whatsapp" style="width: 100%; margin-top: 10px; border: none;">
+                        Enviar por WhatsApp
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
