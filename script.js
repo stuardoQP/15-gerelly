@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Generar Código QR (Optimizado para lectura rápida y clara)
-            const qrData = `🌟 TICKET XV GERELLY 🌟\nNombre: ${formattedName}\nPases Reservados: ${passes}`;
+            const qrData = `TICKET XV GERELLY\nNombre: ${formattedName}\nPases Reservados: ${passes}`;
             const qrContainer = document.getElementById("qrcode");
             qrContainer.innerHTML = ""; // Limpiar por si acaso
             new QRCode(qrContainer, {
