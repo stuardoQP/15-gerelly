@@ -78,6 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCountdown(); // Llamada inicial
 
 
+    let currentUploaderName = 'Invitado';
+
     // --- Lógica de Invitados Personalizados (URL Params) ---
     function initGuestInfo() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -97,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Reemplazar guiones o guiones bajos con espacios si los hay
                 formattedName = guestName.replace(/[_-]/g, ' ');
                 guestNameDisplay.innerText = formattedName;
+                currentUploaderName = formattedName;
             }
 
             // Generar Código QR
@@ -249,11 +252,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Función para añadir imágenes al HTML
-    function addImgToGallery(url) {
+    function addImgToGallery(url, uploaderName = 'Invitado') {
         const div = document.createElement('div');
         div.className = 'gallery-item fade-in visible';
-        div.innerHTML = `<img src="${url}" alt="Recuerdo de los XV">`;
-        div.addEventListener('click', () => openLightbox(url));
+        div.innerHTML = `
+            <img src="${url}" alt="Recuerdo de los XV">
+            <div class="uploader-name">📸 ${uploaderName}</div>
+        `;
+        div.querySelector('img').addEventListener('click', () => openLightbox(url));
         // Se pone de primera en la lista
         galleryContainer.prepend(div);
     }
@@ -264,6 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cloudName: 'lop0hj2d',
             uploadPreset: 'Fotos_Gerelly_XV',
             tags: ['xv_gerelly'], // Etiqueta automática para agrupar todas las fotos
+            folder: `XV_Fotos/${currentUploaderName.replace(/ /g, '_')}`, // Guarda en carpeta con su nombre
             sources: ['local', 'camera', 'instagram'],
             language: 'es',
             text: {
@@ -281,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, (error, result) => {
             if (!error && result && result.event === "success") {
                 console.log('Imagen subida exitosamente: ', result.info);
-                addImgToGallery(result.info.secure_url);
+                addImgToGallery(result.info.secure_url, currentUploaderName);
             }
         });
 
@@ -299,7 +306,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data && data.resources) {
                     data.resources.forEach(img => {
                         const url = `https://res.cloudinary.com/lop0hj2d/image/upload/v${img.version}/${img.public_id}.${img.format}`;
-                        addImgToGallery(url);
+                        // Extraer el nombre de la carpeta (XV_Fotos/Nombre/archivo)
+                        const parts = img.public_id.split('/');
+                        const uploaderName = parts.length > 2 ? parts[1].replace(/_/g, ' ') : 'Invitado';
+                        
+                        addImgToGallery(url, uploaderName);
                     });
                 }
             })

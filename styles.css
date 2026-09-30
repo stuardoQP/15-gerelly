@@ -637,7 +637,18 @@ h1, h2, h3, .cover-title-main {
 .gallery-item img {
     width: 100%;
     display: block;
-    border-radius: 10px;
+    border-radius: 10px 10px 0 0; /* Solo bordes superiores para dar espacio al nombre */
+}
+
+.uploader-name {
+    padding: 10px;
+    background: var(--glass-bg);
+    color: white;
+    font-size: 0.85rem;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-style: italic;
 }
 
 .gallery-item:hover {
