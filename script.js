@@ -224,8 +224,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Lógica de Galería Cloudinary y Lightbox ---
-    const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
+    const openGalleryBtn = document.getElementById('openGalleryBtn');
+    const closeGalleryBtn = document.getElementById('closeGalleryBtn');
+    const galleryModal = document.getElementById('galleryModal');
+    const modalUploadBtn = document.getElementById('modalUploadBtn');
     const galleryContainer = document.getElementById('galleryContainer');
+
+    // Funciones para Modal de Galería
+    if (openGalleryBtn && closeGalleryBtn && galleryModal) {
+        openGalleryBtn.addEventListener('click', () => {
+            galleryModal.classList.remove('hidden');
+        });
+        closeGalleryBtn.addEventListener('click', () => {
+            galleryModal.classList.add('hidden');
+        });
+        galleryModal.addEventListener('click', (e) => {
+            if (e.target === galleryModal) galleryModal.classList.add('hidden');
+        });
+
+        // Abrir automáticamente si el enlace tiene #galeria
+        if (window.location.hash === '#galeria') {
+            galleryModal.classList.remove('hidden');
+        }
+    }
 
     // 1. Configurar Lightbox (se crea una sola vez y se añade al body)
     const lightboxOverlay = document.createElement('div');
@@ -265,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 2. Configurar Cloudinary Upload Widget
-    if (typeof cloudinary !== 'undefined' && uploadPhotoBtn) {
+    if (typeof cloudinary !== 'undefined' && modalUploadBtn) {
         const myWidget = cloudinary.createUploadWidget({
             cloudName: 'lop0hj2d',
             uploadPreset: 'Fotos_Gerelly_XV',
@@ -292,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        uploadPhotoBtn.addEventListener('click', function () {
+        modalUploadBtn.addEventListener('click', function () {
             myWidget.open();
         }, false);
     }

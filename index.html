@@ -145,13 +145,10 @@
 
         <section class="gallery-section glass-panel fade-in">
             <h3 class="section-title">Galería de Recuerdos</h3>
-            <p>Captura los mejores momentos y compártelos con todos nosotros.</p>
-            <button id="uploadPhotoBtn" class="btn btn-primary" style="margin-top: 15px; margin-bottom: 25px;">
-                📸 Subir Fotos
+            <p>Descubre los mejores momentos de la noche y comparte tus propias fotos con nosotros.</p>
+            <button id="openGalleryBtn" class="btn btn-primary" style="margin-top: 15px;">
+                🖼️ Abrir Galería
             </button>
-            <div id="galleryContainer" class="gallery-container">
-                <!-- Las fotos subidas aparecerán aquí -->
-            </div>
         </section>
 
         <section class="interactive-section glass-panel fade-in">
@@ -212,6 +209,21 @@
                         Enviar por WhatsApp
                     </button>
                 </form>
+            </div>
+        </div>
+
+        <!-- Modal Galería -->
+        <div id="galleryModal" class="modal-overlay hidden" style="z-index: 1500;">
+            <div class="modal-content glass-panel gallery-modal-content">
+                <button id="closeGalleryBtn" class="close-modal">&times;</button>
+                <h3 class="modal-title">Nuestros Recuerdos</h3>
+                <p class="modal-text" style="margin-bottom: 15px;">¡Sube tus fotos y revivamos juntos esta noche mágica!</p>
+                <button id="modalUploadBtn" class="btn btn-primary pulse-anim" style="margin-bottom: 20px; padding: 10px 25px; font-size: 1rem;">
+                    📸 Subir Nueva Foto
+                </button>
+                <div id="galleryContainer" class="gallery-container modal-gallery">
+                    <!-- Las fotos subidas aparecerán aquí -->
+                </div>
             </div>
         </div>
 

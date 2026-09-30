@@ -617,6 +617,35 @@ h1, h2, h3, .cover-title-main {
     }
 }
 
+.gallery-modal-content {
+    width: 95%;
+    max-width: 900px;
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 15px 15px 15px; /* Menos padding abajo para maximizar espacio */
+}
+
+.modal-gallery {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-top: 0;
+}
+
+/* Custom Scrollbar for Modal Gallery */
+.modal-gallery::-webkit-scrollbar {
+    width: 6px;
+}
+.modal-gallery::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+.modal-gallery::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
 /* --- Gallery & Lightbox Styles --- */
 .gallery-container {
     column-count: 3;
