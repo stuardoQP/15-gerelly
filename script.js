@@ -483,4 +483,71 @@ document.addEventListener('DOMContentLoaded', () => {
     // Llamar al inicio para mostrar fotos previas
     loadGallery();
 
+    // --- Lluvia de Partículas Mágicas (Luciérnagas) ---
+    const canvas = document.getElementById('particlesCanvas');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        let particlesArray = [];
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1; // 1 to 4 px
+                this.speedX = Math.random() * 1 - 0.5; // movimiento lateral lento
+                this.speedY = Math.random() * -1 - 0.2; // flotar hacia arriba
+                this.opacity = Math.random() * 0.5 + 0.1; // transparencia
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                // Si la partícula sale por arriba, la reiniciamos abajo
+                if (this.y + this.size < 0) {
+                    this.y = canvas.height + this.size;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.fillStyle = `rgba(216, 175, 231, ${this.opacity})`; // Tono lila suave
+                ctx.shadowBlur = 10; // Efecto de brillo
+                ctx.shadowColor = "rgba(216, 175, 231, 0.8)";
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            // Calcular cantidad según tamaño pantalla (max 100 para no laggear celulares)
+            let numberOfParticles = (canvas.width * canvas.height) / 9000;
+            if (numberOfParticles > 80) numberOfParticles = 80;
+            
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
+    }
+
 });
