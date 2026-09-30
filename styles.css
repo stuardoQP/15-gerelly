@@ -677,3 +677,42 @@ h1, h2, h3, .cover-title-main {
         column-count: 2;
     }
 }
+
+/* --- VIP Ticket Styles --- */
+.vip-ticket-section {
+    margin-top: 20px;
+    border-top: 1px dashed rgba(181, 101, 167, 0.4);
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.vip-warning {
+    color: #ffb8b8;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    animation: flashWarning 2s infinite;
+}
+
+@keyframes flashWarning {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.qr-container {
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(181, 101, 167, 0.6);
+    margin-bottom: 12px;
+}
+
+.qr-instructions {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    letter-spacing: 0.5px;
+}

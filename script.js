@@ -91,11 +91,26 @@ document.addEventListener('DOMContentLoaded', () => {
             guestPassesDisplay.innerText = passes;
             guestInfoContainer.classList.remove('hidden');
 
+            let formattedName = 'Invitado Especial';
             if (guestName) {
                 const guestNameDisplay = document.getElementById('guestNameDisplay');
                 // Reemplazar guiones o guiones bajos con espacios si los hay
-                guestNameDisplay.innerText = "Familia " + guestName.replace(/[_-]/g, ' ');
+                formattedName = "Familia " + guestName.replace(/[_-]/g, ' ');
+                guestNameDisplay.innerText = formattedName;
             }
+
+            // Generar Código QR
+            const qrData = `TICKET-XV-${guestName || 'Invitado'}-${passes}Pases`;
+            const qrContainer = document.getElementById("qrcode");
+            qrContainer.innerHTML = ""; // Limpiar por si acaso
+            new QRCode(qrContainer, {
+                text: qrData,
+                width: 140,
+                height: 140,
+                colorDark : "#b565a7",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
         }
     }
     initGuestInfo();
