@@ -111,6 +111,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.H
             });
+            
+            // Permitir que el QR se amplíe al hacer clic
+            qrContainer.addEventListener('click', () => {
+                // qrcode.js crea un canvas y/o un img. Buscamos el img o el canvas.
+                const qrImg = qrContainer.querySelector('img');
+                const qrCanvas = qrContainer.querySelector('canvas');
+                
+                if (qrImg && qrImg.src) {
+                    openLightbox(qrImg.src);
+                } else if (qrCanvas) {
+                    openLightbox(qrCanvas.toDataURL());
+                }
+            });
         }
     }
     initGuestInfo();
