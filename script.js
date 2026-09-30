@@ -105,8 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
             qrContainer.innerHTML = ""; // Limpiar por si acaso
             new QRCode(qrContainer, {
                 text: qrData,
-                width: 140,
-                height: 140,
+                width: 400,
+                height: 400,
                 colorDark : "#b565a7",
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.H

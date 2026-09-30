@@ -713,10 +713,21 @@ h1, h2, h3, .cover-title-main {
     margin-bottom: 12px;
     cursor: pointer;
     transition: transform 0.3s ease;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
 .qr-container:hover {
     transform: scale(1.05);
+}
+
+.qr-container img, .qr-container canvas {
+    width: 100% !important;
+    height: auto !important;
 }
 
 .qr-instructions {
