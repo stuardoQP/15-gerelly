@@ -635,6 +635,7 @@ h1, h2, h3, .cover-title-main {
     padding-right: 10px;
     margin-top: 0;
     display: block; /* Quitar flex para no aplastar las imágenes */
+    column-count: 1 !important; /* Forzar 1 sola columna vertical */
 }
 
 .modal-gallery .gallery-item {
