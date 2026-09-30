@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis XV Años - Gerelly Madrid</title>
     <meta name="description" content="Te invito a celebrar mis XV años.">
+    
+    <!-- Meta tags para que el enlace se vea hermoso en WhatsApp -->
+    <meta property="og:title" content="¡Mis XV Años! 👑 - Gerelly Madrid">
+    <meta property="og:description" content="Estás cordialmente invitado a celebrar este día tan especial. ✨ ¡Toca para abrir tu invitación!">
+    <meta property="og:image" content="fondo-portada.jpeg">
+    <meta property="og:type" content="website">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,6 +19,9 @@
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@300;400;600&family=Great+Vibes&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Cloudinary Widget Script -->
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -90,13 +99,13 @@
             <h3 class="section-title">¿Dónde y Cuándo?</h3>
             <div class="event-details">
                 <div class="detail-item">
-                    <h4>Fecha y Hora</h4>
-                    <p>Sábado, 17 de Octubre de 2026<br>7:00 p. m.</p>
-                </div>
-                <div class="detail-item">
                     <h4>Lugar</h4>
                     <p><strong>La Prechochura</strong><br>Carretera Polvoraico s/n, Morales<br><small>(a 400 metros del
                             puente El Vado)</small></p>
+                </div>
+                <div class="detail-item">
+                    <h4>Fecha y Hora</h4>
+                    <p>Sábado, 17 de Octubre de 2026<br>7:00 p. m.</p>
                 </div>
                 <a href="https://maps.app.goo.gl/Ur3t1L3WR7hTirSC7" target="_blank" rel="noopener noreferrer"
                     class="btn btn-secondary map-btn">
@@ -123,6 +132,17 @@
             <button id="openGiftBtn" class="btn btn-primary" style="margin-top: 20px;">
                 🎁 Ver datos de Yape / Regalo
             </button>
+        </section>
+
+        <section class="gallery-section glass-panel fade-in">
+            <h3 class="section-title">Galería de Recuerdos</h3>
+            <p>Captura los mejores momentos y compártelos con todos nosotros.</p>
+            <button id="uploadPhotoBtn" class="btn btn-primary" style="margin-top: 15px; margin-bottom: 25px;">
+                📸 Subir Fotos
+            </button>
+            <div id="galleryContainer" class="gallery-container">
+                <!-- Las fotos subidas aparecerán aquí -->
+            </div>
         </section>
 
         <section class="interactive-section glass-panel fade-in">
