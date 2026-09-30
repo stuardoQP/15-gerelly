@@ -230,6 +230,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalUploadBtn = document.getElementById('modalUploadBtn');
     const galleryContainer = document.getElementById('galleryContainer');
 
+    // Variables globales para modales
+    const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    let currentDeleteCallback = null;
+
+    // Configuración modal borrar
+    if(cancelDeleteBtn && confirmDeleteBtn) {
+        cancelDeleteBtn.addEventListener('click', () => {
+            deleteConfirmModal.classList.add('hidden');
+            currentDeleteCallback = null;
+        });
+        confirmDeleteBtn.addEventListener('click', () => {
+            if(currentDeleteCallback) currentDeleteCallback();
+            deleteConfirmModal.classList.add('hidden');
+            currentDeleteCallback = null;
+        });
+    }
+
     // Funciones para Modal de Galería
     if (openGalleryBtn && closeGalleryBtn && galleryModal) {
         openGalleryBtn.addEventListener('click', () => {
@@ -338,8 +357,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (deleteToken) {
             const delBtn = div.querySelector('.btn-delete');
             delBtn.addEventListener('click', () => {
-                if(confirm('¿Estás seguro de que quieres eliminar esta foto? Solo puedes hacerlo recién subida.')) {
+                // Mostrar nuestro modal de confirmación
+                deleteConfirmModal.classList.remove('hidden');
+                
+                // Definir qué pasa si acepta
+                currentDeleteCallback = () => {
                     delBtn.innerHTML = '⏳';
+                    delBtn.style.pointerEvents = 'none'; // Desactivar clics
+                    
                     fetch('https://api.cloudinary.com/v1_1/lop0hj2d/delete_by_token', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -348,14 +373,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (res.ok) {
                             div.remove();
                         } else {
-                            alert('El tiempo para eliminar expiró (10 minutos) o hubo un error.');
-                            delBtn.innerHTML = '🗑️';
+                            delBtn.innerHTML = '⚠️ Expiró';
+                            delBtn.style.width = 'auto';
+                            delBtn.style.padding = '0 10px';
+                            delBtn.style.borderRadius = '10px';
                         }
                     }).catch(() => {
-                        alert('Error al intentar eliminar la foto.');
-                        delBtn.innerHTML = '🗑️';
+                        delBtn.innerHTML = '⚠️ Error';
+                        delBtn.style.width = 'auto';
+                        delBtn.style.padding = '0 10px';
+                        delBtn.style.borderRadius = '10px';
                     });
-                }
+                };
             });
         }
 
