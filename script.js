@@ -102,17 +102,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentUploaderName = formattedName;
             }
 
-            // Generar Código QR
-            const qrData = `TICKET-XV-${guestName || 'Invitado'}-${passes}Pases`;
+            // Generar Código QR (Optimizado para lectura rápida y clara)
+            const qrData = `🌟 TICKET XV GERELLY 🌟\nNombre: ${formattedName}\nPases Reservados: ${passes}`;
             const qrContainer = document.getElementById("qrcode");
             qrContainer.innerHTML = ""; // Limpiar por si acaso
             new QRCode(qrContainer, {
                 text: qrData,
                 width: 400,
                 height: 400,
-                colorDark : "#b565a7",
+                colorDark : "#000000", // Negro puro para máximo contraste y rapidez de lectura
                 colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
+                correctLevel : QRCode.CorrectLevel.M // Nivel M hace el código menos denso y más rápido de leer
             });
             
             // Permitir que el QR se amplíe al hacer clic
