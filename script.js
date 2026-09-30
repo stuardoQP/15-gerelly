@@ -251,6 +251,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.location.hash === '#galeria') {
             galleryModal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+            
+            // Saltar la portada y mostrar el contenido principal
+            const coverOverlay = document.getElementById('coverOverlay');
+            const mainContent = document.getElementById('mainContent');
+            if (coverOverlay && mainContent) {
+                coverOverlay.style.display = 'none';
+                mainContent.classList.remove('hidden');
+                // Nota: La música no se autodisparará por políticas del navegador sin interacción previa, lo cual es ideal para un uso rápido como subir fotos.
+                if (typeof initScrollAnimations === 'function') initScrollAnimations();
+            }
         }
     }
 
