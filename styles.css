@@ -699,6 +699,24 @@ h1, h2, h3, .cover-title-main {
     display: flex;
     flex-direction: column;
     text-align: left;
+    flex-grow: 1;
+}
+
+.btn-delete {
+    background: rgba(255, 75, 75, 0.2);
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.3s ease;
+}
+.btn-delete:hover {
+    background: rgba(255, 75, 75, 0.6);
 }
 
 .feed-author {

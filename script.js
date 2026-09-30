@@ -289,9 +289,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Función para añadir imágenes al HTML
-    function addImgToGallery(url, uploaderName = 'Invitado') {
+    function addImgToGallery(url, uploaderName = 'Invitado', deleteToken = null) {
         const div = document.createElement('div');
         div.className = 'gallery-item feed-card fade-in visible';
+        
+        let deleteBtnHtml = '';
+        if (deleteToken) {
+            deleteBtnHtml = `<button class="btn-delete" title="Eliminar por error">🗑️</button>`;
+        }
+
         div.innerHTML = `
             <div class="feed-header">
                 <span class="feed-avatar">👤</span>
@@ -299,6 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="feed-author">${uploaderName}</span>
                     <span class="feed-time">Subió una foto nueva</span>
                 </div>
+                ${deleteBtnHtml}
             </div>
             <img src="${url}" alt="Recuerdo de los XV" class="feed-img">
             <div class="feed-actions">
@@ -326,6 +333,31 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             likeCount.innerText = `${likes} me gusta`;
         });
+
+        // Lógica del botón Eliminar
+        if (deleteToken) {
+            const delBtn = div.querySelector('.btn-delete');
+            delBtn.addEventListener('click', () => {
+                if(confirm('¿Estás seguro de que quieres eliminar esta foto? Solo puedes hacerlo recién subida.')) {
+                    delBtn.innerHTML = '⏳';
+                    fetch('https://api.cloudinary.com/v1_1/lop0hj2d/delete_by_token', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ token: deleteToken })
+                    }).then(res => {
+                        if (res.ok) {
+                            div.remove();
+                        } else {
+                            alert('El tiempo para eliminar expiró (10 minutos) o hubo un error.');
+                            delBtn.innerHTML = '🗑️';
+                        }
+                    }).catch(() => {
+                        alert('Error al intentar eliminar la foto.');
+                        delBtn.innerHTML = '🗑️';
+                    });
+                }
+            });
+        }
 
         // Se pone de primera en la lista
         galleryContainer.prepend(div);
@@ -360,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, (error, result) => {
             if (!error && result && result.event === "success") {
                 console.log('Imagen subida exitosamente: ', result.info);
-                addImgToGallery(result.info.secure_url, currentUploaderName);
+                addImgToGallery(result.info.secure_url, currentUploaderName, result.info.delete_token);
             }
         }).open();
     }
