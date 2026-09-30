@@ -234,17 +234,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (openGalleryBtn && closeGalleryBtn && galleryModal) {
         openGalleryBtn.addEventListener('click', () => {
             galleryModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Bloquear scroll de fondo
         });
         closeGalleryBtn.addEventListener('click', () => {
             galleryModal.classList.add('hidden');
+            document.body.style.overflow = ''; // Restaurar scroll
         });
         galleryModal.addEventListener('click', (e) => {
-            if (e.target === galleryModal) galleryModal.classList.add('hidden');
+            if (e.target === galleryModal) {
+                galleryModal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
         });
 
         // Abrir automáticamente si el enlace tiene #galeria
         if (window.location.hash === '#galeria') {
             galleryModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
     }
 
