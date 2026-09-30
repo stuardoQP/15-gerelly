@@ -281,10 +281,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Función para añadir imágenes al HTML
     function addImgToGallery(url, uploaderName = 'Invitado') {
         const div = document.createElement('div');
-        div.className = 'gallery-item fade-in visible';
+        div.className = 'gallery-item feed-card fade-in visible';
         div.innerHTML = `
-            <img src="${url}" alt="Recuerdo de los XV">
-            <div class="uploader-name">📸 ${uploaderName}</div>
+            <div class="feed-header">
+                <span class="feed-avatar">👤</span>
+                <div class="feed-info">
+                    <span class="feed-author">${uploaderName}</span>
+                    <span class="feed-time">Subió una foto nueva</span>
+                </div>
+            </div>
+            <img src="${url}" alt="Recuerdo de los XV" class="feed-img">
         `;
         div.querySelector('img').addEventListener('click', () => openLightbox(url));
         // Se pone de primera en la lista

@@ -634,14 +634,15 @@ h1, h2, h3, .cover-title-main {
     overscroll-behavior: contain;
     padding-right: 10px;
     margin-top: 0;
-    display: block; /* Quitar flex para no aplastar las imágenes */
-    column-count: 1 !important; /* Forzar 1 sola columna vertical */
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* Separación como post de Facebook */
 }
 
 .modal-gallery .gallery-item {
-    margin-bottom: 25px; /* Separación vertical */
-    height: auto;
+    flex-shrink: 0; /* Impide que las fotos se aplasten */
     width: 100%;
+    margin-bottom: 0;
 }
 
 /* Custom Scrollbar for Modal Gallery */
@@ -665,30 +666,58 @@ h1, h2, h3, .cover-title-main {
 }
 
 .gallery-item {
-    margin-bottom: 15px;
     break-inside: avoid;
-    border-radius: 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
 }
 
-.gallery-item img {
+.feed-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.feed-avatar {
+    font-size: 1.8rem;
+    margin-right: 12px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.feed-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.feed-author {
+    font-weight: 600;
+    color: white;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.feed-time {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.gallery-item img.feed-img {
     width: 100%;
     display: block;
-    border-radius: 10px 10px 0 0; /* Solo bordes superiores para dar espacio al nombre */
-}
-
-.uploader-name {
-    padding: 10px;
-    background: var(--glass-bg);
-    color: white;
-    font-size: 0.85rem;
-    text-align: center;
-    font-family: 'Montserrat', sans-serif;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    font-style: italic;
+    cursor: pointer;
+    border-radius: 0 0 12px 12px;
 }
 
 .gallery-item:hover {
