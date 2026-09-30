@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (guestName) {
                 const guestNameDisplay = document.getElementById('guestNameDisplay');
                 // Reemplazar guiones o guiones bajos con espacios si los hay
-                formattedName = "Familia " + guestName.replace(/[_-]/g, ' ');
+                formattedName = guestName.replace(/[_-]/g, ' ');
                 guestNameDisplay.innerText = formattedName;
             }
 
