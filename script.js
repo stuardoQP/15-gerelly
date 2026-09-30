@@ -332,47 +332,68 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 2. Configurar Cloudinary Upload Widget (Se crea al hacer click para poder pedir nombre)
-    if (typeof cloudinary !== 'undefined' && modalUploadBtn) {
-        modalUploadBtn.addEventListener('click', function () {
-            
-            // Si no hay nombre (ej. escaneó el QR de la mesa), se lo pedimos
-            if (currentUploaderName === 'Invitado') {
-                const nameInput = prompt("¡Hola! ¿Cuál es tu nombre (o familia) para la galería?");
-                if (nameInput && nameInput.trim() !== '') {
-                    currentUploaderName = nameInput.trim();
-                } else {
-                    // Si cancela o lo deja vacío, detenemos el proceso
-                    return;
-                }
-            }
+    const namePromptModal = document.getElementById('namePromptModal');
+    const uploaderNameInput = document.getElementById('uploaderNameInput');
+    const acceptNameBtn = document.getElementById('acceptNameBtn');
+    const cancelNameBtn = document.getElementById('cancelNameBtn');
 
-            cloudinary.createUploadWidget({
-                cloudName: 'lop0hj2d',
-                uploadPreset: 'Fotos_Gerelly_XV',
-                tags: ['xv_gerelly'], // Etiqueta automática para agrupar todas las fotos
-                folder: `XV_Fotos/${currentUploaderName.replace(/ /g, '_')}`, // Guarda en carpeta con su nombre
-                sources: ['local', 'camera', 'instagram'],
-                language: 'es',
-                text: {
-                    es: {
-                        menu: { files: 'Mis Archivos' },
-                        local: {
-                            browse: 'Buscar',
-                            dd_title_single: 'Arrastra tu foto aquí',
-                            dd_title_multi: 'Arrastra tus fotos aquí',
-                            drop_title_single: 'Suelta tu foto para subir',
-                            drop_title_multi: 'Suelta tus fotos para subir'
-                        }
+    function openCloudinaryWidget() {
+        cloudinary.createUploadWidget({
+            cloudName: 'lop0hj2d',
+            uploadPreset: 'Fotos_Gerelly_XV',
+            tags: ['xv_gerelly'], // Etiqueta automática para agrupar todas las fotos
+            folder: `XV_Fotos/${currentUploaderName.replace(/ /g, '_')}`, // Guarda en carpeta con su nombre
+            sources: ['local', 'camera', 'instagram'],
+            language: 'es',
+            text: {
+                es: {
+                    menu: { files: 'Mis Archivos' },
+                    local: {
+                        browse: 'Buscar',
+                        dd_title_single: 'Arrastra tu foto aquí',
+                        dd_title_multi: 'Arrastra tus fotos aquí',
+                        drop_title_single: 'Suelta tu foto para subir',
+                        drop_title_multi: 'Suelta tus fotos para subir'
                     }
                 }
-            }, (error, result) => {
-                if (!error && result && result.event === "success") {
-                    console.log('Imagen subida exitosamente: ', result.info);
-                    addImgToGallery(result.info.secure_url, currentUploaderName);
+            }
+        }, (error, result) => {
+            if (!error && result && result.event === "success") {
+                console.log('Imagen subida exitosamente: ', result.info);
+                addImgToGallery(result.info.secure_url, currentUploaderName);
+            }
+        }).open();
+    }
+
+    if (typeof cloudinary !== 'undefined' && modalUploadBtn) {
+        modalUploadBtn.addEventListener('click', function () {
+            // Si no hay nombre (ej. escaneó el QR de la mesa), abrimos nuestro modal personalizado
+            if (currentUploaderName === 'Invitado') {
+                namePromptModal.classList.remove('hidden');
+            } else {
+                openCloudinaryWidget();
+            }
+        });
+
+        if (acceptNameBtn && cancelNameBtn) {
+            acceptNameBtn.addEventListener('click', () => {
+                const nameInput = uploaderNameInput.value.trim();
+                if (nameInput !== '') {
+                    currentUploaderName = nameInput;
+                    namePromptModal.classList.add('hidden');
+                    uploaderNameInput.style.border = 'none';
+                    openCloudinaryWidget();
+                } else {
+                    uploaderNameInput.style.border = '2px solid #ff4b4b'; // Alerta visual
                 }
-            }).open();
-            
-        }, false);
+            });
+
+            cancelNameBtn.addEventListener('click', () => {
+                namePromptModal.classList.add('hidden');
+                uploaderNameInput.value = '';
+                uploaderNameInput.style.border = 'none';
+            });
+        }
     }
 
     // 3. Cargar imágenes existentes (Requiere activar "Resource List" en Cloudinary)

@@ -227,6 +227,19 @@
             </div>
         </div>
 
+        <!-- Modal Pedir Nombre -->
+        <div id="namePromptModal" class="modal-overlay hidden" style="z-index: 1600;">
+            <div class="modal-content glass-panel" style="max-width: 350px;">
+                <h3 class="modal-title" style="font-size: 1.4rem; margin-bottom: 10px; color: var(--primary-color);">XV Gerelly Madrid</h3>
+                <p class="modal-text" style="margin-bottom: 15px; font-size: 0.95rem;">¡Hola! ¿Cuál es tu nombre (o familia) para la galería?</p>
+                <input type="text" id="uploaderNameInput" class="form-input" placeholder="Ej. Familia Perez" style="margin-bottom: 20px; width: 100%; text-align: center;">
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button id="cancelNameBtn" class="btn" style="background: rgba(255,255,255,0.2); flex: 1; padding: 10px;">Cancelar</button>
+                    <button id="acceptNameBtn" class="btn btn-primary" style="flex: 1; padding: 10px;">Aceptar</button>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script src="script.js"></script>
