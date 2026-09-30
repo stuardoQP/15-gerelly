@@ -628,12 +628,19 @@ h1, h2, h3, .cover-title-main {
 
 .modal-gallery {
     flex-grow: 1;
+    min-height: 0; /* Fix crítico para que funcione el scroll en móviles */
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     padding-right: 10px;
     margin-top: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Espacio entre fotos en vertical */
+    display: block; /* Quitar flex para no aplastar las imágenes */
+}
+
+.modal-gallery .gallery-item {
+    margin-bottom: 25px; /* Separación vertical */
+    height: auto;
+    width: 100%;
 }
 
 /* Custom Scrollbar for Modal Gallery */
