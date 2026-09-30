@@ -717,7 +717,42 @@ h1, h2, h3, .cover-title-main {
     width: 100%;
     display: block;
     cursor: pointer;
-    border-radius: 0 0 12px 12px;
+    border-radius: 0;
+}
+
+.feed-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.btn-like {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 0.95rem;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.btn-like:hover {
+    transform: scale(1.1);
+}
+
+.btn-like.liked {
+    color: #ff4b4b;
+    font-weight: bold;
+}
+
+.like-count {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: 'Montserrat', sans-serif;
 }
 
 .gallery-item:hover {

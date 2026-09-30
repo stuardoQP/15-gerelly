@@ -291,42 +291,77 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
             <img src="${url}" alt="Recuerdo de los XV" class="feed-img">
+            <div class="feed-actions">
+                <button class="btn-like">🤍 Me gusta</button>
+                <span class="like-count">0</span>
+            </div>
         `;
         div.querySelector('img').addEventListener('click', () => openLightbox(url));
+
+        // Lógica del botón Me Gusta (Visual / Local)
+        const likeBtn = div.querySelector('.btn-like');
+        const likeCount = div.querySelector('.like-count');
+        let likes = Math.floor(Math.random() * 10) + 1; // Un par de likes iniciales para animar
+        likeCount.innerText = `${likes} me gusta`;
+
+        likeBtn.addEventListener('click', () => {
+            if (likeBtn.classList.contains('liked')) {
+                likes--;
+                likeBtn.classList.remove('liked');
+                likeBtn.innerHTML = '🤍 Me gusta';
+            } else {
+                likes++;
+                likeBtn.classList.add('liked');
+                likeBtn.innerHTML = '❤️ Te gusta';
+            }
+            likeCount.innerText = `${likes} me gusta`;
+        });
+
         // Se pone de primera en la lista
         galleryContainer.prepend(div);
     }
 
-    // 2. Configurar Cloudinary Upload Widget
+    // 2. Configurar Cloudinary Upload Widget (Se crea al hacer click para poder pedir nombre)
     if (typeof cloudinary !== 'undefined' && modalUploadBtn) {
-        const myWidget = cloudinary.createUploadWidget({
-            cloudName: 'lop0hj2d',
-            uploadPreset: 'Fotos_Gerelly_XV',
-            tags: ['xv_gerelly'], // Etiqueta automática para agrupar todas las fotos
-            folder: `XV_Fotos/${currentUploaderName.replace(/ /g, '_')}`, // Guarda en carpeta con su nombre
-            sources: ['local', 'camera', 'instagram'],
-            language: 'es',
-            text: {
-                es: {
-                    menu: { files: 'Mis Archivos' },
-                    local: {
-                        browse: 'Buscar',
-                        dd_title_single: 'Arrastra tu foto aquí',
-                        dd_title_multi: 'Arrastra tus fotos aquí',
-                        drop_title_single: 'Suelta tu foto para subir',
-                        drop_title_multi: 'Suelta tus fotos para subir'
-                    }
+        modalUploadBtn.addEventListener('click', function () {
+            
+            // Si no hay nombre (ej. escaneó el QR de la mesa), se lo pedimos
+            if (currentUploaderName === 'Invitado') {
+                const nameInput = prompt("¡Hola! ¿Cuál es tu nombre (o familia) para la galería?");
+                if (nameInput && nameInput.trim() !== '') {
+                    currentUploaderName = nameInput.trim();
+                } else {
+                    // Si cancela o lo deja vacío, detenemos el proceso
+                    return;
                 }
             }
-        }, (error, result) => {
-            if (!error && result && result.event === "success") {
-                console.log('Imagen subida exitosamente: ', result.info);
-                addImgToGallery(result.info.secure_url, currentUploaderName);
-            }
-        });
 
-        modalUploadBtn.addEventListener('click', function () {
-            myWidget.open();
+            cloudinary.createUploadWidget({
+                cloudName: 'lop0hj2d',
+                uploadPreset: 'Fotos_Gerelly_XV',
+                tags: ['xv_gerelly'], // Etiqueta automática para agrupar todas las fotos
+                folder: `XV_Fotos/${currentUploaderName.replace(/ /g, '_')}`, // Guarda en carpeta con su nombre
+                sources: ['local', 'camera', 'instagram'],
+                language: 'es',
+                text: {
+                    es: {
+                        menu: { files: 'Mis Archivos' },
+                        local: {
+                            browse: 'Buscar',
+                            dd_title_single: 'Arrastra tu foto aquí',
+                            dd_title_multi: 'Arrastra tus fotos aquí',
+                            drop_title_single: 'Suelta tu foto para subir',
+                            drop_title_multi: 'Suelta tus fotos para subir'
+                        }
+                    }
+                }
+            }, (error, result) => {
+                if (!error && result && result.event === "success") {
+                    console.log('Imagen subida exitosamente: ', result.info);
+                    addImgToGallery(result.info.secure_url, currentUploaderName);
+                }
+            }).open();
+            
         }, false);
     }
 
@@ -337,6 +372,9 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json())
             .then(data => {
                 if (data && data.resources) {
+                    // Ordenar por timestamp de creación ascendente (al hacer prepend, las más nuevas quedan arriba)
+                    data.resources.sort((a, b) => a.version - b.version);
+
                     data.resources.forEach(img => {
                         const url = `https://res.cloudinary.com/lop0hj2d/image/upload/v${img.version}/${img.public_id}.${img.format}`;
                         // Extraer el nombre de la carpeta (XV_Fotos/Nombre/archivo)
