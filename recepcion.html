@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Control de Acceso VIP - XV Gerelly</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Librería para escanear QR con la cámara del celular -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #111;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .header {
+            background: #b565a7;
+            padding: 15px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+        #reader {
+            width: 100%;
+            flex-grow: 1;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        /* Ocultar enlace de la librería */
+        #reader a { display: none !important; }
+        
+        .status-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 55vh;
+            background: #222;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            z-index: 20;
+        }
+        .status-panel.active {
+            transform: translateY(0);
+        }
+        .status-icon {
+            font-size: 4.5rem;
+            margin-bottom: 10px;
+        }
+        .status-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .status-details {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            color: #ddd;
+            line-height: 1.4;
+        }
+        .btn-reset {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        
+        /* Colores Dinámicos según Resultado */
+        .status-panel.success { background: #28a745; }
+        .status-panel.success .btn-reset { color: #28a745; }
+        
+        .status-panel.warning { background: #ffc107; color: #000; }
+        .status-panel.warning .status-details { color: #333; }
+        .status-panel.warning .btn-reset { color: #d39e00; }
+        
+        .status-panel.error { background: #dc3545; }
+        .status-panel.error .btn-reset { color: #dc3545; }
+        
+        /* Estilos del Admin */
+        .btn-admin { position: absolute; right: 15px; top: 12px; background: rgba(255,255,255,0.2); border: none; color: #fff; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 1rem; }
+        .admin-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #111; z-index: 100; display: flex; flex-direction: column; transform: translateY(-100%); transition: transform 0.3s ease; }
+        .admin-panel.active { transform: translateY(0); }
+        .admin-header { background: #b565a7; padding: 15px; text-align: center; font-weight: 700; font-size: 1.2rem; position: relative; }
+        .btn-close-admin { position: absolute; left: 15px; top: 12px; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+        .admin-content { padding: 20px; overflow-y: auto; flex-grow: 1; }
+        .admin-form { display: flex; flex-direction: column; gap: 10px; background: #222; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+        .admin-form input { padding: 10px; border-radius: 5px; border: 1px solid #444; background: #333; color: #fff; }
+        .btn-save { background: #28a745; color: white; border: none; padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .guest-list-item { background: #222; padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .guest-info p { margin: 0; padding: 2px 0; }
+        .btn-delete { background: #dc3545; border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;}
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        📷 Escáner de Acceso VIP
+        <button class="btn-admin" onclick="toggleAdmin()">⚙️ Admin</button>
+    </div>
+
+    <!-- Panel de Administración -->
+    <div id="adminPanel" class="admin-panel">
+        <div class="admin-header">
+            <button class="btn-close-admin" onclick="toggleAdmin()">✕</button>
+            Gestión de Invitados
+        </div>
+        <div class="admin-content">
+            <div class="admin-form">
+                <h3 style="margin-top:0;">Agregar / Editar Invitado</h3>
+                <input type="text" id="adminName" placeholder="Nombre (Ej. Familia Perez)" required>
+                <input type="number" id="adminPasses" placeholder="Cantidad de Pases (Ej. 4)" required>
+                <input type="text" id="adminTable" placeholder="Mesa asignada (Ej. 5)" required>
+                <button class="btn-save" onclick="saveGuest()">Guardar Invitado</button>
+            </div>
+            <h3 style="margin-bottom:10px;">Lista de Invitados (<span id="guestCount">0</span>)</h3>
+            <div id="guestListContainer"></div>
+            <br>
+            <button class="btn-delete" style="width:100%; padding:15px; background:#555;" onclick="clearScans()">Reiniciar Entradas (Borrar escaneos previos)</button>
+        </div>
+    </div>
+
+    <!-- Contenedor donde se mostrará la cámara -->
+    <div id="reader"></div>
+
+    <!-- Panel que sube desde abajo con el resultado -->
+    <div id="statusPanel" class="status-panel">
+        <div id="statusIcon" class="status-icon">✅</div>
+        <div id="statusTitle" class="status-title">Acceso Autorizado</div>
+        <div id="statusDetails" class="status-details">Familia Perez<br>Pases: 4 | Mesa: 5</div>
+        <button class="btn-reset" onclick="resumeScanner()">Escanear Siguiente</button>
+    </div>
+
+    <script>
+        // =========================================================
+        // 1. TU BASE DE DATOS DE INVITADOS (Memoria Local)
+        // =========================================================
+        let defaultGuestDatabase = {
+            "Familia Perez": { pases: 4, mesa: 5 },
+            "Tia Maria": { pases: 2, mesa: 1 },
+            "Primos Lopez": { pases: 5, mesa: 8 },
+            "Invitado": { pases: 1, mesa: "Mesa General" }
+        };
+        let guestDatabase = JSON.parse(localStorage.getItem('guestDatabaseXV')) || defaultGuestDatabase;
+
+        function updateStorage() {
+            localStorage.setItem('guestDatabaseXV', JSON.stringify(guestDatabase));
+            renderGuestList();
+        }
+
+        // =========================================================
+        // 2. SISTEMA DE MEMORIA LOCAL (Evita escaneos duplicados)
+        // =========================================================
+        // Guarda en la memoria del navegador quién ya entró
+        let scannedGuests = JSON.parse(localStorage.getItem('checkedInGuestsXV')) || {};
+
+        const html5QrcodeScanner = new Html5Qrcode("reader");
+        const statusPanel = document.getElementById('statusPanel');
+        const statusIcon = document.getElementById('statusIcon');
+        const statusTitle = document.getElementById('statusTitle');
+        const statusDetails = document.getElementById('statusDetails');
+        
+        let isScanning = true;
+
+        // Lo que sucede cuando la cámara detecta un QR
+        function onScanSuccess(decodedText, decodedResult) {
+            if (!isScanning) return; // Evitar escaneos dobles rápidos
+            isScanning = false;
+            
+            // Pausar cámara temporalmente
+            html5QrcodeScanner.pause();
+            
+            // Extraer el nombre del texto del QR
+            let guestName = null;
+            const lines = decodedText.split('\n');
+            lines.forEach(line => {
+                if(line.includes("Nombre:")) {
+                    guestName = line.replace("Nombre:", "").trim();
+                }
+            });
+
+            // Si el QR no tiene el formato correcto, lo rechazamos
+            if (!guestName) {
+                showStatus('error', '❌', 'Código Inválido', 'Este código QR no pertenece a la invitación de los XV Años de Gerelly.');
+                return;
+            }
+
+            // Buscar en nuestra base de datos
+            const guestInfo = guestDatabase[guestName];
+            
+            if (guestInfo) {
+                // Verificar si ya fue escaneado antes
+                if (scannedGuests[guestName]) {
+                    showStatus('warning', '⚠️', 'Pase Ya Utilizado', `<strong>${guestName}</strong><br>Este código ya fue validado en la puerta a las ${scannedGuests[guestName]}.<br><strong>¡Posible código duplicado!</strong>`);
+                } else {
+                    // Si todo está bien, registrar entrada con la hora actual
+                    const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    scannedGuests[guestName] = time;
+                    localStorage.setItem('checkedInGuestsXV', JSON.stringify(scannedGuests));
+                    
+                    showStatus('success', '✅', 'Acceso Autorizado', `Familia / Nombre: <strong>${guestName}</strong><br>Pases Autorizados: <strong>${guestInfo.pases}</strong><br><br>Dirigirse a la <strong>MESA ${guestInfo.mesa}</strong>`);
+                }
+            } else {
+                // El QR es de la página, pero se olvidaron de asignarle una mesa en la base de datos de arriba
+                showStatus('warning', '❓', 'Nombre no registrado', `El nombre "<strong>${guestName}</strong>" es válido pero no se le ha asignado una mesa en el sistema de recepción.`);
+            }
+        }
+
+        // Ignorar fallos de escaneo mientras busca un QR
+        function onScanFailure(error) {}
+
+        // Función para cambiar los colores y textos del panel
+        function showStatus(type, icon, title, details) {
+            statusPanel.className = `status-panel active ${type}`;
+            statusIcon.innerHTML = icon;
+            statusTitle.innerHTML = title;
+            statusDetails.innerHTML = details;
+        }
+
+        // Función para ocultar panel y volver a escanear
+        function resumeScanner() {
+            statusPanel.className = 'status-panel';
+            setTimeout(() => {
+                isScanning = true;
+                html5QrcodeScanner.resume();
+            }, 300);
+        }
+
+        // Iniciar la cámara trasera del celular
+        Html5Qrcode.getCameras().then(devices => {
+            if (devices && devices.length) {
+                // Usa la cámara trasera por defecto
+                let cameraId = devices[devices.length - 1].id;
+                html5QrcodeScanner.start(
+                    cameraId, 
+                    { fps: 10, qrbox: { width: 250, height: 250 } },
+                    onScanSuccess,
+                    onScanFailure
+                );
+            }
+        }).catch(err => {
+            alert("No se pudo acceder a la cámara. Por favor da los permisos necesarios en tu navegador.");
+        });
+
+        // =========================================================
+        // Lógica del Panel de Administración
+        // =========================================================
+        const adminPanel = document.getElementById('adminPanel');
+        function toggleAdmin() {
+            adminPanel.classList.toggle('active');
+            if (adminPanel.classList.contains('active')) {
+                renderGuestList();
+            }
+        }
+
+        function saveGuest() {
+            const name = document.getElementById('adminName').value.trim();
+            const passes = document.getElementById('adminPasses').value.trim();
+            const table = document.getElementById('adminTable').value.trim();
+
+            if (!name || !passes || !table) {
+                alert('Completa todos los campos');
+                return;
+            }
+
+            guestDatabase[name] = { pases: parseInt(passes), mesa: table };
+            updateStorage();
+            
+            document.getElementById('adminName').value = '';
+            document.getElementById('adminPasses').value = '';
+            document.getElementById('adminTable').value = '';
+        }
+
+        function deleteGuest(name) {
+            if (confirm(`¿Eliminar a ${name}?`)) {
+                delete guestDatabase[name];
+                updateStorage();
+            }
+        }
+
+        function clearScans() {
+            if (confirm('¿Seguro que quieres borrar el registro de quién ya entró? Esto permitirá volver a escanear todos los códigos.')) {
+                scannedGuests = {};
+                localStorage.setItem('checkedInGuestsXV', JSON.stringify(scannedGuests));
+                renderGuestList();
+                alert('Registro reiniciado');
+            }
+        }
+
+        function renderGuestList() {
+            const container = document.getElementById('guestListContainer');
+            container.innerHTML = '';
+            const names = Object.keys(guestDatabase);
+            document.getElementById('guestCount').innerText = names.length;
+
+            names.sort().forEach(name => {
+                const info = guestDatabase[name];
+                const status = scannedGuests[name] ? `<span style="color:#28a745;font-size:0.8rem">✅ Entró ${scannedGuests[name]}</span>` : `<span style="color:#ffc107;font-size:0.8rem">⏳ Pendiente</span>`;
+                
+                const div = document.createElement('div');
+                div.className = 'guest-list-item';
+                div.innerHTML = `
+                    <div class="guest-info">
+                        <strong>${name}</strong>
+                        <p style="font-size: 0.9rem; color: #ccc;">Pases: ${info.pases} | Mesa: ${info.mesa}</p>
+                        ${status}
+                    </div>
+                    <button class="btn-delete" onclick="deleteGuest('${name}')">X</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>
