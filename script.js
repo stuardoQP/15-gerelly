@@ -1,18 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // --- Referencias a elementos ---
     const coverOverlay = document.getElementById('coverOverlay');
     const enterBtn = document.getElementById('enterBtn');
     const mainContent = document.getElementById('mainContent');
     const bgMusic = document.getElementById('bgMusic');
     const musicToggleBtn = document.getElementById('musicToggleBtn');
-    
+
     // --- Lógica de la Portada y Música ---
     enterBtn.addEventListener('click', () => {
         // Ocultar portada
         coverOverlay.style.opacity = '0';
         coverOverlay.style.transform = 'translateY(-100vh)';
-        
+
         setTimeout(() => {
             coverOverlay.style.display = 'none';
             // Mostrar contenido principal
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (passes) {
             const guestInfoContainer = document.getElementById('guestInfoContainer');
             const guestPassesDisplay = document.getElementById('guestPassesDisplay');
-            
+
             guestPassesDisplay.innerText = passes;
             guestInfoContainer.classList.remove('hidden');
 
@@ -110,17 +110,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 text: qrData,
                 width: 400,
                 height: 400,
-                colorDark : "#000000", // Negro puro para máximo contraste y rapidez de lectura
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.M // Nivel M hace el código menos denso y más rápido de leer
+                colorDark: "#000000", // Negro puro para máximo contraste y rapidez de lectura
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.M // Nivel M hace el código menos denso y más rápido de leer
             });
-            
+
             // Permitir que el QR se amplíe al hacer clic
             qrContainer.addEventListener('click', () => {
                 // qrcode.js crea un canvas y/o un img. Buscamos el img o el canvas.
                 const qrImg = qrContainer.querySelector('img');
                 const qrCanvas = qrContainer.querySelector('canvas');
-                
+
                 if (qrImg && qrImg.src) {
                     openLightbox(qrImg.src);
                 } else if (qrCanvas) {
@@ -135,13 +135,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Animaciones de Scroll (Fade In) ---
     function initScrollAnimations() {
         const faders = document.querySelectorAll('.fade-in');
-        
+
         const appearOptions = {
             threshold: 0.15,
             rootMargin: "0px 0px -50px 0px"
         };
-        
-        const appearOnScroll = new IntersectionObserver(function(entries, observer) {
+
+        const appearOnScroll = new IntersectionObserver(function (entries, observer) {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) {
                     return;
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }, appearOptions);
-        
+
         faders.forEach(fader => {
             appearOnScroll.observe(fader);
         });
@@ -203,20 +203,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (rsvpForm) {
             rsvpForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                
+
                 const name = document.getElementById('rsvpName').value;
                 const status = document.getElementById('rsvpStatus').value;
                 const message = document.getElementById('rsvpMessage').value;
-                
+
                 let whatsappText = `¡Hola! Soy *${name}*.\n\nTe escribo para confirmarte que *${status}* a los XV años de Gerelly.`;
-                
+
                 if (message.trim() !== '') {
                     whatsappText += `\n\nMensaje: "${message}"`;
                 }
-                
+
                 const phoneNumber = '51983842973';
                 const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(whatsappText)}`;
-                
+
                 window.open(whatsappUrl, '_blank');
                 rsvpModal.classList.add('hidden');
             });
@@ -237,13 +237,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentDeleteCallback = null;
 
     // Configuración modal borrar
-    if(cancelDeleteBtn && confirmDeleteBtn) {
+    if (cancelDeleteBtn && confirmDeleteBtn) {
         cancelDeleteBtn.addEventListener('click', () => {
             deleteConfirmModal.classList.add('hidden');
             currentDeleteCallback = null;
         });
         confirmDeleteBtn.addEventListener('click', () => {
-            if(currentDeleteCallback) currentDeleteCallback();
+            if (currentDeleteCallback) currentDeleteCallback();
             deleteConfirmModal.classList.add('hidden');
             currentDeleteCallback = null;
         });
@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.location.hash === '#galeria') {
             galleryModal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
-            
+
             // Saltar la portada y mostrar el contenido principal
             const coverOverlay = document.getElementById('coverOverlay');
             const mainContent = document.getElementById('mainContent');
@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function addImgToGallery(url, uploaderName = 'Invitado', deleteToken = null) {
         const div = document.createElement('div');
         div.className = 'gallery-item feed-card fade-in visible';
-        
+
         let deleteBtnHtml = '';
         if (deleteToken) {
             deleteBtnHtml = `<button class="btn-delete" title="Eliminar por error">🗑️</button>`;
@@ -359,12 +359,12 @@ document.addEventListener('DOMContentLoaded', () => {
             delBtn.addEventListener('click', () => {
                 // Mostrar nuestro modal de confirmación
                 deleteConfirmModal.classList.remove('hidden');
-                
+
                 // Definir qué pasa si acepta
                 currentDeleteCallback = () => {
                     delBtn.innerHTML = '⏳';
                     delBtn.style.pointerEvents = 'none'; // Desactivar clics
-                    
+
                     fetch('https://api.cloudinary.com/v1_1/lop0hj2d/delete_by_token', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -457,29 +457,47 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 3. Cargar imágenes existentes (Requiere activar "Resource List" en Cloudinary)
+    // 3. Cargar imágenes existentes (Sin límite gracias al script)
     function loadGallery() {
-        // Hacemos fetch al JSON que genera Cloudinary (si está activado)
-        fetch('https://res.cloudinary.com/lop0hj2d/image/list/xv_gerelly.json')
+        // Cuando tengas el enlace de tu Google Script, pégalo aquí adentro entre las comillas.
+        // Ejemplo: const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby.../exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxv_K_ceEG7uKO4vzoHE7LHXLF9jhwhAmpR9AXJTXvTB9nkDCycZJtbbgO-vQwBgJULcw/exec';
+
+        const fetchUrl = GOOGLE_SCRIPT_URL !== ''
+            ? GOOGLE_SCRIPT_URL
+            : 'https://res.cloudinary.com/lop0hj2d/image/list/xv_gerelly.json';
+
+        fetch(fetchUrl)
             .then(res => res.json())
             .then(data => {
+                let resources = [];
+                // Adaptamos dependiendo de si viene de Google Script (Search API) o de Cloudinary
                 if (data && data.resources) {
-                    // Ordenar por timestamp de creación ascendente (al hacer prepend, las más nuevas quedan arriba)
-                    data.resources.sort((a, b) => a.version - b.version);
+                    resources = data.resources;
+                }
 
-                    data.resources.forEach(img => {
-                        const url = `https://res.cloudinary.com/lop0hj2d/image/upload/v${img.version}/${img.public_id}.${img.format}`;
+                if (resources.length > 0) {
+                    // Ordenar cronológicamente (ya que hacemos prepend, las más nuevas quedan arriba)
+                    resources.sort((a, b) => {
+                        const timeA = a.created_at ? new Date(a.created_at).getTime() : a.version;
+                        const timeB = b.created_at ? new Date(b.created_at).getTime() : b.version;
+                        return timeA - timeB; // Ascendente
+                    });
+
+                    resources.forEach(img => {
+                        // Construir la URL si viene del client-list, o usar la segura si viene del Search API
+                        const url = img.secure_url || `https://res.cloudinary.com/lop0hj2d/image/upload/v${img.version}/${img.public_id}.${img.format}`;
                         // Extraer el nombre de la carpeta (XV_Fotos/Nombre/archivo)
                         const parts = img.public_id.split('/');
                         const uploaderName = parts.length > 2 ? parts[1].replace(/_/g, ' ') : 'Invitado';
-                        
+
                         addImgToGallery(url, uploaderName);
                     });
                 }
             })
             .catch(err => console.log('Aún no hay fotos o la lista no es pública.', err));
     }
-    
+
     // Llamar al inicio para mostrar fotos previas
     loadGallery();
 
@@ -488,7 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (canvas) {
         const ctx = canvas.getContext('2d');
         let particlesArray = [];
-        
+
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
@@ -531,7 +549,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Calcular cantidad según tamaño pantalla (max 100 para no laggear celulares)
             let numberOfParticles = (canvas.width * canvas.height) / 9000;
             if (numberOfParticles > 80) numberOfParticles = 80;
-            
+
             for (let i = 0; i < numberOfParticles; i++) {
                 particlesArray.push(new Particle());
             }
